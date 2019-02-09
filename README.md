@@ -7,10 +7,13 @@
 <p align="center">Eventverse is a highly performant and easy to understand event emitter for the JavaScript Universe which includes Node and the browser.<p>
 
 <div align="center">
-	<img src="https://img.shields.io/npm/v/Eventverse.svg?style=flat-square">
-	<img src="https://img.shields.io/appveyor/ci/robertcorponoi/Eventverse.svg?style=flat-square">
-	<img src="https://img.shields.io/david/robertcorponoi/Eventverse.svg?style=flat-square">
-	<img src="https://img.shields.io/gitter/room/robertcorponoi/eventverse.svg?style=flat-square">
+	<a href="https://www.npmjs.com/package/eventverse" target="__blank">
+		<img src="https://img.shields.io/npm/v/eventverse.svg?style=flat-square">
+	</a>
+	<img src="https://img.shields.io/david/robertcorponoi/eventverse.svg?style=flat-square">
+	<a href="https://gitter.im/robertcorponoi/community?utm_source=share-link&utm_medium=link&utm_campaign=share-link" target="__blank">
+		<img src="https://img.shields.io/gitter/room/robertcorponoi/eventverse.svg?style=flat-square">
+	</a>
 </div>
 
 ## **Installation**
