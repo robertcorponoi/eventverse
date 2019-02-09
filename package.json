@@ -1,0 +1,50 @@
+{
+  "name": "eventverse",
+  "version": "0.2.1",
+  "description": "",
+  "main": "index.js",
+  "module": "dist/eventverse.js",
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "type-check:watch": "npm run type-check -- --watch",
+    "build": "npm run build:types && npm run build:js",
+    "build:types": "tsc --emitDeclarationOnly",
+    "build:js": "babel src --out-dir lib --extensions \".ts,.tsx\" --source-maps inline",
+    "bundle": "rollup -c",
+    "test": "npm run bundle && mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/robertcorponoi/eventverse.git"
+  },
+  "keywords": [
+    "EventEmitter",
+    "event",
+    "events",
+    "emit",
+    "pub",
+    "publish",
+    "sub",
+    "subscribe",
+    "pub/sub",
+    "emitter"
+  ],
+  "author": "Robert Corponoi",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.2.2",
+    "@babel/plugin-proposal-class-properties": "^7.3.0",
+    "@babel/plugin-proposal-object-rest-spread": "^7.3.2",
+    "@babel/preset-env": "^7.3.1",
+    "@babel/preset-typescript": "^7.1.0",
+    "chai": "^4.2.0",
+    "mocha": "^5.2.0",
+    "rollup": "^1.1.2",
+    "rollup-plugin-babel": "^4.3.2",
+    "rollup-plugin-commonjs": "^9.2.0",
+    "rollup-plugin-node-resolve": "^4.0.0",
+    "sinon": "^7.2.3",
+    "typescript": "^3.3.3"
+  }
+}
