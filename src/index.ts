@@ -1,63 +1,46 @@
 'use strict'
 
 import * as utils from './utils'
-import Listener from './Listener';
+
+import Listener from './interfaces/Listener';
 
 /**
- * Eventverse is a highly performant and easy to understand event emitter 
- * for the JavaScript Universe which includes Node and the browser.
+ * Eventverse is a higly performant and easy to use event emitter for Nodejs and the browser.
  * 
  * @author Robert Corponoi <robertcorponoi@gmail.com>
  * 
- * @version 0.2.0
+ * @version 1.0.0
  */
 export default class Eventverse {
 
 	/**
-	 * The maximum amount of listeners each event can have at
-	 * one time.
+	 * The maximum amount of listeners each event can have at one time.
 	 * 
 	 * @since 0.1.0
 	 * 
 	 * @property {number}
-	 * @readonly
 	 * 
 	 * @default 10
 	 */
-	_maxListenerCount: number;
+  maxListenerCount: number;
 
 	/**
-	 * A collection of all of the listeners created for this instance
-	 * of Eventverse.
+	 * A collection of all of the listeners created for this instance of Eventverse.
 	 * 
 	 * @since 0.1.0
 	 * 
 	 * @property {Object}
-	 * @readonly
 	 */
-	_events: any = Object.create(null);
+  events: any = Object.create(null);
 
 	/**
 	 * @param {number} [maxListenerCount=10] The maximum amount of listeners each event can have at one time. 
 	 */
-	constructor(maxListenerCount = 10) {
+  constructor(maxListenerCount: number = 10) {
 
-		this._maxListenerCount = maxListenerCount;
+    this.maxListenerCount = maxListenerCount;
 
-	}
-
-	/**
-	 * Return the max amount of listeners allowed for each event.
-	 * 
-	 * @since 0.1.0
-	 * 
-	 * @returns {number}
-	 */
-	get maxListenerCount(): number {
-
-		return this._maxListenerCount;
-
-	}
+  }
 
 	/**
 	 * Returns the number of listeners for a given event.
@@ -68,48 +51,39 @@ export default class Eventverse {
 	 * 
 	 * @returns {number}
 	 */
-	listenerCount(event: string): (string | undefined) {
+  listenerCount(event: string): number {
 
-		if (!this.exists(event)) {
+    return this.events[event].length;
 
-			console.warn('[Eventverse][ListenerCount]: Unable to retrieve listener count for the given event because the given event does not exist');
-
-			return;
-
-		}
-
-		return this._events[event].length;
-
-	}
+  }
 
 	/**
-	 * Runs all of the listeners attached to this Eventverse with the event name
-	 * and with the supplied arguments.
+	 * Runs all of the listeners attached to this Eventverse with the event name and with the supplied arguments.
 	 * 
 	 * @since 0.1.0
 	 * 
 	 * @param {string} event The name of the event to emit.
 	 * @param {...*} args The arguments to pass to the listeners.
 	 */
-	emit(event: string, ...args: Array<string>) {
+  emit(event: string, ...args: Array<string>) {
 
-		if (!this.exists(event)) return;
+    if (!this.exists(event)) return;
 
-		const listeners: Array<Listener> = this._events[event];
+    const listeners: Array<Listener> = this.events[event];
 
-		for (const listener of listeners) {
+    for (const listener of listeners) {
 
-			listener._fn.call(listener._ctx, ...args);
+      listener.fn.call(listener.ctx, ...args);
 
-			if (listener._once) {
+      if (listener.once) {
 
-				this.removeListener(event, listener._fn);
+        this.removeListener(event, listener.fn);
 
-			}
+      }
 
-		}
+    }
 
-	}
+  }
 
 	/**
 	 * Adds a listener function for the given event.
@@ -124,28 +98,28 @@ export default class Eventverse {
 	 * 
 	 * @returns {Eventverse}
 	 */
-	addListener(event: string, fn: any, context = this, once = false): (Eventverse | undefined) {
+  addListener(event: string, fn: any, context = this, once = false): (Eventverse | undefined) {
 
-		const listener: Listener = new Listener(fn, context, once);
+    const listener: Listener = { fn: fn, ctx: context, once: once };
 
-		if (!this.exists(event)) {
+    if (!this.exists(event)) {
 
-			this._events[event] = [];
+      this.events[event] = [];
 
-		}
-		else if (this._events[event].length === this._maxListenerCount) {
+    }
+    else if (this.events[event].length === this.maxListenerCount) {
 
-			console.warn(`[Eventverse][addListener]: The event ${event} already has the max amount of listeners.`);
+      console.warn(`[Eventverse][addListener]: The event ${event} already has the max amount of listeners.`);
 
-			return;
+      return;
 
-		}
+    }
 
-		this._events[event].push(listener);
+    this.events[event].push(listener);
 
-		return this;
+    return this;
 
-	}
+  }
 
 	/**
 	 * Removes a listener function for the given event.
@@ -157,31 +131,31 @@ export default class Eventverse {
 	 * 
 	 * @returns {Eventverse}
 	 */
-	removeListener(event: string, listener: any): (Eventverse | undefined) {
+  removeListener(event: string, listener: any): (Eventverse | undefined) {
 
-		if (!this.exists(event)) {
+    if (!this.exists(event)) {
 
-			console.warn('[Eventverse][removeListener]: Unable to remove listener for an event that doesnt exist.');
+      console.warn('[Eventverse][removeListener]: Unable to remove listener for an event that doesnt exist.');
 
-			return;
+      return;
 
-		}
+    }
 
-		for (const eventListener of this._events[event]) {
+    for (const eventListener of this.events[event]) {
 
-			if (utils.compareFunctions(eventListener._fn, listener)) {
+      if (utils.compareFunctions(eventListener.fn, listener)) {
 
-				this._events[event] = this._events[event].filter((evListener: any) => evListener != eventListener);
+        this.events[event] = this.events[event].filter((evListener: any) => evListener != eventListener);
 
-				break;
+        break;
 
-			}
+      }
 
-		}
+    }
 
-		return this;
+    return this;
 
-	}
+  }
 
 	/**
 	 * Removes all listeners from a given event.
@@ -192,21 +166,21 @@ export default class Eventverse {
 	 * 
 	 * @returns {Eventverse}
 	 */
-	removeAllListeners(event: string): (Eventverse | undefined) {
+  removeAllListeners(event: string): (Eventverse | undefined) {
 
-		if (!this.exists(event)) {
+    if (!this.exists(event)) {
 
-			console.warn('[Eventverse][removeAllListeners]: Unable to remove listener for an event that doesnt exist.');
+      console.warn('[Eventverse][removeAllListeners]: Unable to remove listener for an event that doesnt exist.');
 
-			return;
+      return;
 
-		}
+    }
 
-		this._events[event] = [];
+    this.events[event] = [];
 
-		return this;
+    return this;
 
-	}
+  }
 
 	/**
 	 * Add a listener function that will only run once.
@@ -219,13 +193,13 @@ export default class Eventverse {
 	 * 
 	 * @returns {Eventverse}
 	 */
-	once(event: string, fn: any, context: any = this): Eventverse {
+  once(event: string, fn: any, context: any = this): Eventverse {
 
-		this.addListener(event, fn, context, true);
+    this.addListener(event, fn, context, true);
 
-		return this;
+    return this;
 
-	}
+  }
 
 	/**
 	 * Adds a listener function for the given event.
@@ -238,13 +212,13 @@ export default class Eventverse {
 	 * 
 	 * @returns {Eventverse}
 	 */
-	on(event: string, fn: any, context: any = this): Eventverse {
+  on(event: string, fn: any, context: any = this): Eventverse {
 
-		this.addListener(event, fn, context);
+    this.addListener(event, fn, context);
 
-		return this;
+    return this;
 
-	}
+  }
 
 
 	/**
@@ -257,12 +231,12 @@ export default class Eventverse {
 	 * 
 	 * @returns {boolean} Returns true if the event exists or false otherwise.
 	 */
-	private exists(event: string) {
+  private exists(event: string) {
 
-		if (this._events[event]) return true;
+    if (this.events[event]) return true;
 
-		return false;
+    return false;
 
-	}
+  }
 
 }

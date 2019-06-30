@@ -8,17 +8,9 @@ let person;
 
 describe('Emitting events', () => {
 
-	beforeEach(() => {
+	beforeEach(() => person = new Eventverse());
 
-		person = new Eventverse();
-
-	});
-
-	afterEach(() => {
-
-		person = null;
-
-	});
+	afterEach(() => person = null);
 
 	it('should call the listener functions for the event when the event is emitted', () => {
 

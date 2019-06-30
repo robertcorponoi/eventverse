@@ -1,24 +1,15 @@
 'use strict'
 
 const chai = require('chai');
-const sinon = require('sinon');
 const Eventverse = require('../index');
 
 let person;
 
 describe('Adding listeners', () => {
 
-	beforeEach(() => {
+	beforeEach(() => person = new Eventverse());
 
-		person = new Eventverse();
-
-	});
-
-	afterEach(() => {
-
-		person = null;
-
-	});
+	afterEach(() => person = null);
 
 	it('should add an event listener to a new event', () => {
 
@@ -26,7 +17,7 @@ describe('Adding listeners', () => {
 
 		person.addListener('hello', sayHello);
 
-		chai.expect(person._events.hello.length).to.equal(1) && chai.expect(typeof person._events.hello[0]._fn).to.equal('function') && chai.expect(person._events.hello[0]._once).to.be.false;
+		chai.expect(person.events.hello.length).to.equal(1) && chai.expect(typeof person.events.hello[0].fn).to.equal('function') && chai.expect(person.events.hello[0].once).to.be.false;
 
 	});
 
@@ -38,7 +29,7 @@ describe('Adding listeners', () => {
 		person.addListener('hello', sayHello);
 		person.addListener('hello', sayHola);
 
-		chai.expect(person._events.hello.length).to.equal(2);
+		chai.expect(person.events.hello.length).to.equal(2);
 
 	});
 
@@ -48,7 +39,7 @@ describe('Adding listeners', () => {
 
 		person.on('hello', sayHello)
 
-		chai.expect(person._events.hello.length).to.equal(1) && chai.expect(typeof person._events.hello[0]._fn).to.equal('function') && chai.expect(person._events.hello[0]._once).to.be.false;
+		chai.expect(person.events.hello.length).to.equal(1) && chai.expect(typeof person.events.hello[0].fn).to.equal('function') && chai.expect(person.events.hello[0].once).to.be.false;
 
 	});
 
@@ -60,7 +51,7 @@ describe('Adding listeners', () => {
 		person.on('hello', sayHello);
 		person.on('hello', sayHola);
 
-		chai.expect(person._events.hello.length).to.equal(2);
+		chai.expect(person.events.hello.length).to.equal(2);
 
 	});
 
@@ -70,7 +61,7 @@ describe('Adding listeners', () => {
 
 		person.once('hello', sayHello);
 
-		chai.expect(person._events.hello.length).to.equal(1) && chai.expect(typeof person._events.hello[0]._fn).to.equal('function') && chai.expect(person._events.hello[0]._once).to.be.true;
+		chai.expect(person.events.hello.length).to.equal(1) && chai.expect(typeof person.events.hello[0].fn).to.equal('function') && chai.expect(person.events.hello[0].once).to.be.true;
 
 	});
 
@@ -82,7 +73,7 @@ describe('Adding listeners', () => {
 		person.once('hello', sayHello);
 		person.once('hello', sayHola);
 
-		chai.expect(person._events.hello.length).to.equal(2);
+		chai.expect(person.events.hello.length).to.equal(2);
 
 	});
 
@@ -92,7 +83,7 @@ describe('Adding listeners', () => {
 
 		for (let i = 0; i < 15; ++i) person.on('hello', sayHello);
 
-		chai.expect(person._events.hello.length).to.equal(10);
+		chai.expect(person.events.hello.length).to.equal(10);
 
 	});
 

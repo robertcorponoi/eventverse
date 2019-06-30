@@ -7,17 +7,9 @@ let person;
 
 describe('Getting listener count', () => {
 
-	beforeEach(() => {
+	beforeEach(() => person = new Eventverse());
 
-		person = new Eventverse();
-
-	});
-
-	afterEach(() => {
-
-		person = null;
-
-	});
+	afterEach(() => person = null);
 
 	it('should get the amount of listeners for an event', () => {
 
@@ -32,22 +24,6 @@ describe('Getting listener count', () => {
 		const listeners = person.listenerCount('hello');
 
 		chai.expect(listeners).to.equal(3);
-
-	});
-
-	it('should returned undefined because the event doesnt exist', () => {
-
-		const sayHello = () => console.log('Hello World!');
-		const sayHola = () => console.log('Hola World!');
-		const sayBonjour = () => console.log('Bonjour World!');
-
-		person.addListener('hello', sayHello);
-		person.addListener('hello', sayHola);
-		person.addListener('hello', sayBonjour);
-
-		const listeners = person.listenerCount('bye');
-
-		chai.expect(listeners).to.be.undefined;
 
 	});
 

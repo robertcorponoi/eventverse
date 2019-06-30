@@ -1,24 +1,15 @@
 'use strict'
 
 const chai = require('chai');
-const sinon = require('sinon');
 const Eventverse = require('../index');
 
 let person;
 
 describe('Removing listeners', () => {
 
-	beforeEach(() => {
+	beforeEach(() => person = new Eventverse());
 
-		person = new Eventverse();
-
-	});
-
-	afterEach(() => {
-
-		person = null;
-
-	});
+	afterEach(() => person = null);
 
 	it('should remove a listener from an event', () => {
 
@@ -32,7 +23,7 @@ describe('Removing listeners', () => {
 
 		person.removeListener('hello', sayHola);
 
-		chai.expect(person._events.hello.length).to.equal(2);
+		chai.expect(person.events.hello.length).to.equal(2);
 
 	});
 
@@ -64,7 +55,7 @@ describe('Removing listeners', () => {
 
 		person.removeAllListeners('hello');
 
-		chai.expect(person._events.hello.length).to.equal(0);
+		chai.expect(person.events.hello.length).to.equal(0);
 
 	});
 

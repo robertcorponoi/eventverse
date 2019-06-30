@@ -1,46 +1,33 @@
 /**
- * Eventverse is a highly performant and easy to understand event emitter
- * for the JavaScript Universe which includes Node and the browser.
+ * Eventverse is a higly performant and easy to use event emitter for Nodejs and the browser.
  *
  * @author Robert Corponoi <robertcorponoi@gmail.com>
  *
- * @version 0.2.0
+ * @version 1.0.0
  */
 export default class Eventverse {
     /**
-     * The maximum amount of listeners each event can have at
-     * one time.
+     * The maximum amount of listeners each event can have at one time.
      *
      * @since 0.1.0
      *
      * @property {number}
-     * @readonly
      *
      * @default 10
      */
-    _maxListenerCount: number;
+    maxListenerCount: number;
     /**
-     * A collection of all of the listeners created for this instance
-     * of Eventverse.
+     * A collection of all of the listeners created for this instance of Eventverse.
      *
      * @since 0.1.0
      *
      * @property {Object}
-     * @readonly
      */
-    _events: any;
+    events: any;
     /**
      * @param {number} [maxListenerCount=10] The maximum amount of listeners each event can have at one time.
      */
     constructor(maxListenerCount?: number);
-    /**
-     * Return the max amount of listeners allowed for each event.
-     *
-     * @since 0.1.0
-     *
-     * @returns {number}
-     */
-    readonly maxListenerCount: number;
     /**
      * Returns the number of listeners for a given event.
      *
@@ -50,10 +37,9 @@ export default class Eventverse {
      *
      * @returns {number}
      */
-    listenerCount(event: string): (string | undefined);
+    listenerCount(event: string): number;
     /**
-     * Runs all of the listeners attached to this Eventverse with the event name
-     * and with the supplied arguments.
+     * Runs all of the listeners attached to this Eventverse with the event name and with the supplied arguments.
      *
      * @since 0.1.0
      *

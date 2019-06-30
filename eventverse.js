@@ -54,79 +54,32 @@ function compareFunctions(fn1, fn2) {
   return false;
 }
 
-var Listener =
 /**
- * The function that will be called when the listener is processed.
- * 
- * @since 0.1.0
- * 
- * @property {Function}
- * @readonly
- */
-
-/**
- * The context to use when calling this listener.
- * 
- * @since 0.1.0
- * 
- * @property {*}
- * @readonly
- */
-
-/**
- * Whether or not this listener will be automatically destroyed after being run once.
- * 
- * @since 0.1.0
- * 
- * @property {boolean}
- * @readonly
- */
-function Listener(fn, ctx, once) {
-  _classCallCheck(this, Listener);
-
-  _defineProperty(this, "_fn", void 0);
-
-  _defineProperty(this, "_ctx", void 0);
-
-  _defineProperty(this, "_once", void 0);
-
-  this._fn = fn;
-  this._ctx = ctx;
-  this._once = once;
-};
-
-/**
- * Eventverse is a highly performant and easy to understand event emitter 
- * for the JavaScript Universe which includes Node and the browser.
+ * Eventverse is a higly performant and easy to use event emitter for Nodejs and the browser.
  * 
  * @author Robert Corponoi <robertcorponoi@gmail.com>
  * 
- * @version 0.2.0
+ * @version 1.0.0
  */
-
 var Eventverse =
 /*#__PURE__*/
 function () {
   /**
-   * The maximum amount of listeners each event can have at
-   * one time.
+   * The maximum amount of listeners each event can have at one time.
    * 
    * @since 0.1.0
    * 
    * @property {number}
-   * @readonly
    * 
    * @default 10
    */
 
   /**
-   * A collection of all of the listeners created for this instance
-   * of Eventverse.
+   * A collection of all of the listeners created for this instance of Eventverse.
    * 
    * @since 0.1.0
    * 
    * @property {Object}
-   * @readonly
    */
 
   /**
@@ -137,16 +90,18 @@ function () {
 
     _classCallCheck(this, Eventverse);
 
-    _defineProperty(this, "_maxListenerCount", void 0);
+    _defineProperty(this, "maxListenerCount", void 0);
 
-    _defineProperty(this, "_events", Object.create(null));
+    _defineProperty(this, "events", Object.create(null));
 
-    this._maxListenerCount = maxListenerCount;
+    this.maxListenerCount = maxListenerCount;
   }
   /**
-   * Return the max amount of listeners allowed for each event.
+   * Returns the number of listeners for a given event.
    * 
    * @since 0.1.0
+   * 
+   * @param {string} event The name of the event.
    * 
    * @returns {number}
    */
@@ -154,27 +109,11 @@ function () {
 
   _createClass(Eventverse, [{
     key: "listenerCount",
-
-    /**
-     * Returns the number of listeners for a given event.
-     * 
-     * @since 0.1.0
-     * 
-     * @param {string} event The name of the event.
-     * 
-     * @returns {number}
-     */
     value: function listenerCount(event) {
-      if (!this.exists(event)) {
-        console.warn('[Eventverse][ListenerCount]: Unable to retrieve listener count for the given event because the given event does not exist');
-        return;
-      }
-
-      return this._events[event].length;
+      return this.events[event].length;
     }
     /**
-     * Runs all of the listeners attached to this Eventverse with the event name
-     * and with the supplied arguments.
+     * Runs all of the listeners attached to this Eventverse with the event name and with the supplied arguments.
      * 
      * @since 0.1.0
      * 
@@ -186,7 +125,7 @@ function () {
     key: "emit",
     value: function emit(event) {
       if (!this.exists(event)) return;
-      var listeners = this._events[event];
+      var listeners = this.events[event];
 
       for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
         args[_key - 1] = arguments[_key];
@@ -198,14 +137,14 @@ function () {
 
       try {
         for (var _iterator = listeners[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-          var _listener$_fn;
+          var _listener$fn;
 
           var listener = _step.value;
 
-          (_listener$_fn = listener._fn).call.apply(_listener$_fn, [listener._ctx].concat(args));
+          (_listener$fn = listener.fn).call.apply(_listener$fn, [listener.ctx].concat(args));
 
-          if (listener._once) {
-            this.removeListener(event, listener._fn);
+          if (listener.once) {
+            this.removeListener(event, listener.fn);
           }
         }
       } catch (err) {
@@ -242,17 +181,20 @@ function () {
     value: function addListener(event, fn) {
       var context = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : this;
       var once = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
-      var listener = new Listener(fn, context, once);
+      var listener = {
+        fn: fn,
+        ctx: context,
+        once: once
+      };
 
       if (!this.exists(event)) {
-        this._events[event] = [];
-      } else if (this._events[event].length === this._maxListenerCount) {
+        this.events[event] = [];
+      } else if (this.events[event].length === this.maxListenerCount) {
         console.warn("[Eventverse][addListener]: The event ".concat(event, " already has the max amount of listeners."));
         return;
       }
 
-      this._events[event].push(listener);
-
+      this.events[event].push(listener);
       return this;
     }
     /**
@@ -284,15 +226,15 @@ function () {
         var _loop = function _loop() {
           var eventListener = _step2.value;
 
-          if (compareFunctions(eventListener._fn, listener)) {
-            _this._events[event] = _this._events[event].filter(function (evListener) {
+          if (compareFunctions(eventListener.fn, listener)) {
+            _this.events[event] = _this.events[event].filter(function (evListener) {
               return evListener != eventListener;
             });
             return "break";
           }
         };
 
-        for (var _iterator2 = this._events[event][Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+        for (var _iterator2 = this.events[event][Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
           var _ret = _loop();
 
           if (_ret === "break") break;
@@ -332,7 +274,7 @@ function () {
         return;
       }
 
-      this._events[event] = [];
+      this.events[event] = [];
       return this;
     }
     /**
@@ -387,13 +329,8 @@ function () {
   }, {
     key: "exists",
     value: function exists(event) {
-      if (this._events[event]) return true;
+      if (this.events[event]) return true;
       return false;
-    }
-  }, {
-    key: "maxListenerCount",
-    get: function get() {
-      return this._maxListenerCount;
     }
   }]);
 

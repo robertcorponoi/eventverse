@@ -1,9 +1,9 @@
 {
   "name": "eventverse",
-  "version": "0.2.3",
+  "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "module": "dist/eventverse.js",
+  "module": "eventverse.js",
   "scripts": {
     "type-check": "tsc --noEmit",
     "type-check:watch": "npm run type-check -- --watch",
@@ -11,8 +11,10 @@
     "build:types": "tsc --emitDeclarationOnly",
     "build:js": "babel src --out-dir lib --extensions \".ts,.tsx\" --source-maps inline",
     "bundle": "rollup -c",
-    "test": "npm run bundle && mocha"
+    "bundle:watch": "rollup -c --watch",
+    "test": "mocha"
   },
+  "types": "lib/index.d.ts",
   "repository": {
     "type": "git",
     "url": "git://github.com/robertcorponoi/eventverse.git"

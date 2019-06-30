@@ -1,0 +1,11 @@
+1.0.0 / 2019-06-30
+==================
+* Added CHANGELOG
+* Updated out of date dev dependencies
+* Moved module out of dist folder into root folder
+* Removed pseudo-privacy from class properties
+* Changed Listner to be an interface
+
+0.1.0
+==================
+* Initial Release
