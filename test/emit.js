@@ -64,6 +64,23 @@ describe('Emitting events', () => {
 
 		chai.expect(helloWorldCalls).to.equal(3) && chai.expect(holaWorldCalls).to.equal(1);
 
+  });
+  
+  it('should call the listener functions for the event the appropriate number of times when the event is emitted using the times called property', () => {
+
+		const sayHelloWorld = () => {};
+
+		const sayHolaWorld = () => {};
+
+		person.on('hello', sayHelloWorld);
+		person.once('hello2', sayHolaWorld);
+
+		person.emit('hello');
+		person.emit('hello');
+    person.emit('hello2');
+
+		chai.expect(person.timesCalled('hello')).to.equal(2);
+
 	});
 
 	it('should call the listener functions with the supplied parameters', () => {

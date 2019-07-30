@@ -1,3 +1,7 @@
+1.0.3 / 2019-07-29
+==================
+* [FEATURE] Added the times called method to keep track of the number of times a listener has been called and added test cases for it.
+
 1.0.2 / 2019-07-29
 ==================
 * [FEATURE] Updated all dev dependencies to their latest versions.

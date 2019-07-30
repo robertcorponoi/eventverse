@@ -54,20 +54,57 @@ function compareFunctions(fn1, fn2) {
   return false;
 }
 
+var Listener =
+/**
+ * The function that will be called when the listener is processed.
+ * 
+ * @property {Function}
+ */
+
+/**
+ * The context to use when calling this listener.
+ * 
+ * @property {*}
+ */
+
+/**
+ * Whether or not this listener will be automatically destroyed after being run once.
+ * 
+ * @property {boolean}
+ */
+
+/**
+ * Keeps track of the number of times that this listener has been called.
+ * 
+ * @property {number} 
+ */
+function Listener(fn, ctx, once) {
+  _classCallCheck(this, Listener);
+
+  _defineProperty(this, "fn", void 0);
+
+  _defineProperty(this, "ctx", void 0);
+
+  _defineProperty(this, "once", void 0);
+
+  _defineProperty(this, "timesCalled", 0);
+
+  this.fn = fn;
+  this.ctx = ctx;
+  this.once = once;
+};
+
 /**
  * Eventverse is a higly performant and easy to use event emitter for Nodejs and the browser.
  * 
  * @author Robert Corponoi <robertcorponoi@gmail.com>
- * 
- * @version 1.0.0
  */
+
 var Eventverse =
 /*#__PURE__*/
 function () {
   /**
    * The maximum amount of listeners each event can have at one time.
-   * 
-   * @since 0.1.0
    * 
    * @property {number}
    * 
@@ -76,8 +113,6 @@ function () {
 
   /**
    * A collection of all of the listeners created for this instance of Eventverse.
-   * 
-   * @since 0.1.0
    * 
    * @property {Object}
    */
@@ -99,8 +134,6 @@ function () {
   /**
    * Returns the number of listeners for a given event.
    * 
-   * @since 0.1.0
-   * 
    * @param {string} event The name of the event.
    * 
    * @returns {number}
@@ -113,9 +146,20 @@ function () {
       return this.events[event].length;
     }
     /**
-     * Runs all of the listeners attached to this Eventverse with the event name and with the supplied arguments.
+     * Returns the number of times a listener was called.
      * 
-     * @since 0.1.0
+     * @param {string} event The name of the event to get the times called for.
+     * 
+     * @returns {number} Returns the number of times the event was called.
+     */
+
+  }, {
+    key: "timesCalled",
+    value: function timesCalled(event) {
+      return this.events[event][0].timesCalled;
+    }
+    /**
+     * Runs all of the listeners attached to this Eventverse with the event name and with the supplied arguments.
      * 
      * @param {string} event The name of the event to emit.
      * @param {...*} args The arguments to pass to the listeners.
@@ -143,17 +187,16 @@ function () {
 
           (_listener$fn = listener.fn).call.apply(_listener$fn, [listener.ctx].concat(args));
 
-          if (listener.once) {
-            this.removeListener(event, listener.fn);
-          }
+          listener.timesCalled++;
+          if (listener.once) this.removeListener(event, listener.fn);
         }
       } catch (err) {
         _didIteratorError = true;
         _iteratorError = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion && _iterator.return != null) {
-            _iterator.return();
+          if (!_iteratorNormalCompletion && _iterator["return"] != null) {
+            _iterator["return"]();
           }
         } finally {
           if (_didIteratorError) {
@@ -164,8 +207,6 @@ function () {
     }
     /**
      * Adds a listener function for the given event.
-     * 
-     * @since 0.1.0
      * 
      * 
      * @param {string} event The name of the event to add a listener for.
@@ -181,11 +222,7 @@ function () {
     value: function addListener(event, fn) {
       var context = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : this;
       var once = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
-      var listener = {
-        fn: fn,
-        ctx: context,
-        once: once
-      };
+      var listener = new Listener(fn, context, once);
 
       if (!this.exists(event)) {
         this.events[event] = [];
@@ -199,8 +236,6 @@ function () {
     }
     /**
      * Removes a listener function for the given event.
-     * 
-     * @since 0.1.0
      * 
      * @param {string} event The name of the event to remove the listener on.
      * @param {Function} listener The listener to remove from the event.
@@ -244,8 +279,8 @@ function () {
         _iteratorError2 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
-            _iterator2.return();
+          if (!_iteratorNormalCompletion2 && _iterator2["return"] != null) {
+            _iterator2["return"]();
           }
         } finally {
           if (_didIteratorError2) {
@@ -258,8 +293,6 @@ function () {
     }
     /**
      * Removes all listeners from a given event.
-     * 
-     * @since 0.1.0
      * 
      * @param {string} event The name of the event to remove all listeners from.
      * 
@@ -280,8 +313,6 @@ function () {
     /**
      * Add a listener function that will only run once.
      * 
-     * @since 0.1.0
-     * 
      * @param {string} event The name of the event to add a listener for.
      * @param {Function} fn The function to run when the event is emitted.
      * @param {Object} [context=this] The context to use when calling the listener.
@@ -299,8 +330,6 @@ function () {
     /**
      * Adds a listener function for the given event.
      * 
-     * @since 0.1.0
-     * 
      * @param {string} event The name of the event to add a listener for.
      * @param {Function} fn The function to run when the event is emitted.
      * @param {Object} [context=this] The context to use when calling the listener.
@@ -317,8 +346,7 @@ function () {
     }
     /**
      * Checks if an event exists.
-     * 
-     * @since 0.1.0
+      * 
      * @private
      * 
      * @param {string} event The name of the event.
