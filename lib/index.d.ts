@@ -2,14 +2,10 @@
  * Eventverse is a higly performant and easy to use event emitter for Nodejs and the browser.
  *
  * @author Robert Corponoi <robertcorponoi@gmail.com>
- *
- * @version 1.0.0
  */
 export default class Eventverse {
     /**
      * The maximum amount of listeners each event can have at one time.
-     *
-     * @since 0.1.0
      *
      * @property {number}
      *
@@ -18,8 +14,6 @@ export default class Eventverse {
     maxListenerCount: number;
     /**
      * A collection of all of the listeners created for this instance of Eventverse.
-     *
-     * @since 0.1.0
      *
      * @property {Object}
      */
@@ -31,17 +25,21 @@ export default class Eventverse {
     /**
      * Returns the number of listeners for a given event.
      *
-     * @since 0.1.0
-     *
      * @param {string} event The name of the event.
      *
      * @returns {number}
      */
     listenerCount(event: string): number;
     /**
-     * Runs all of the listeners attached to this Eventverse with the event name and with the supplied arguments.
+     * Returns the number of times a listener was called.
      *
-     * @since 0.1.0
+     * @param {string} event The name of the event to get the times called for.
+     *
+     * @returns {number} Returns the number of times the event was called.
+     */
+    timesCalled(event: string): number;
+    /**
+     * Runs all of the listeners attached to this Eventverse with the event name and with the supplied arguments.
      *
      * @param {string} event The name of the event to emit.
      * @param {...*} args The arguments to pass to the listeners.
@@ -49,8 +47,6 @@ export default class Eventverse {
     emit(event: string, ...args: Array<string>): void;
     /**
      * Adds a listener function for the given event.
-     *
-     * @since 0.1.0
      *
      *
      * @param {string} event The name of the event to add a listener for.
@@ -64,8 +60,6 @@ export default class Eventverse {
     /**
      * Removes a listener function for the given event.
      *
-     * @since 0.1.0
-     *
      * @param {string} event The name of the event to remove the listener on.
      * @param {Function} listener The listener to remove from the event.
      *
@@ -75,8 +69,6 @@ export default class Eventverse {
     /**
      * Removes all listeners from a given event.
      *
-     * @since 0.1.0
-     *
      * @param {string} event The name of the event to remove all listeners from.
      *
      * @returns {Eventverse}
@@ -84,8 +76,6 @@ export default class Eventverse {
     removeAllListeners(event: string): (Eventverse | undefined);
     /**
      * Add a listener function that will only run once.
-     *
-     * @since 0.1.0
      *
      * @param {string} event The name of the event to add a listener for.
      * @param {Function} fn The function to run when the event is emitted.
@@ -97,8 +87,6 @@ export default class Eventverse {
     /**
      * Adds a listener function for the given event.
      *
-     * @since 0.1.0
-     *
      * @param {string} event The name of the event to add a listener for.
      * @param {Function} fn The function to run when the event is emitted.
      * @param {Object} [context=this] The context to use when calling the listener.
@@ -108,8 +96,7 @@ export default class Eventverse {
     on(event: string, fn: any, context?: any): Eventverse;
     /**
      * Checks if an event exists.
-     *
-     * @since 0.1.0
+   *
      * @private
      *
      * @param {string} event The name of the event.

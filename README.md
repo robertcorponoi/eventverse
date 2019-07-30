@@ -28,7 +28,7 @@ $ npm install --save eventverse
 
 ## **Usage**
 
-TO use Eventverse in a Node project, simply require it like so:
+To use Eventverse in a Node project, simply require it like so:
 
 ```js
 const Eventverse = require('eventverse');
@@ -120,6 +120,18 @@ Returns the number of listeners for a given event.
 
 ```js
 return person.listenerCount('hello'); // returns 3
+```
+
+### **timesCalled**
+
+Returns the number of times a listener has been called.
+
+| param | type   | description                                                         | default |
+|-------|--------|---------------------------------------------------------------------|---------|
+| event | string | The name of the event to get the number of times it has been called |         |
+
+```js
+return person.timesCalled('hello');
 ```
 
 ### **emit**
