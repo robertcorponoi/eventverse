@@ -7,13 +7,14 @@
 <p align="center">Eventverse is a highly performant and easy to understand event emitter for the JavaScript Universe which includes Node and the browser.<p>
 
 <div align="center">
-	<a href="https://www.npmjs.com/package/eventverse" target="__blank">
-		<img src="https://img.shields.io/npm/v/eventverse.svg?style=flat-square">
-	</a>
-	<img src="https://img.shields.io/david/robertcorponoi/eventverse.svg?style=flat-square">
-	<a href="https://gitter.im/robertcorponoi/community?utm_source=share-link&utm_medium=link&utm_campaign=share-link" target="__blank">
-		<img src="https://img.shields.io/gitter/room/robertcorponoi/eventverse.svg?style=flat-square">
-	</a>
+
+  [![NPM version](https://img.shields.io/npm/v/eventverse.svg?style=flat)](https://www.npmjs.com/package/eventverse)
+  [![Known Vulnerabilities](https://snyk.io/test/github/robertcorponoi/eventverse/badge.svg)](https://snyk.io/test/github/robertcorponoi/eventverse)
+  [![NPM downloads](https://img.shields.io/npm/dm/eventverse.svg?style=flat)](https://www.npmjs.com/package/eventverse)
+  <a href="https://badge.fury.io/js/eventverse"><img src="https://img.shields.io/github/issues/robertcorponoi/eventverse.svg" alt="issues" height="18"></a>
+  <a href="https://badge.fury.io/js/eventverse"><img src="https://img.shields.io/github/license/robertcorponoi/eventverse.svg" alt="license" height="18"></a>
+  [![Gitter](https://badges.gitter.im/gitterHQ/gitter.svg)](https://gitter.im/robertcorponoi)
+
 </div>
 
 ## **Installation**
@@ -22,7 +23,7 @@ Eventverse can be used as a Node module or as an ES6 module.
 
 To install Eventverse through npm, simply use the following command:
 
-```
+```bash
 $ npm install --save eventverse
 ```
 
@@ -37,6 +38,10 @@ const Eventverse = require('eventverse');
 and to use it in the browser, simply import it like so:
 
 ```js
+// Webpack
+import Eventverse from 'eventverse';
+
+// Browser
 import Eventverse from './node_modules/eventverse/eventverse.js';
 ```
 
