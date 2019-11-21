@@ -10,6 +10,7 @@
 
   [![NPM version](https://img.shields.io/npm/v/eventverse.svg?style=flat)](https://www.npmjs.com/package/eventverse)
   [![Known Vulnerabilities](https://snyk.io/test/github/robertcorponoi/eventverse/badge.svg)](https://snyk.io/test/github/robertcorponoi/eventverse)
+  ![npm](https://img.shields.io/npm/dt/eventverse)
   [![NPM downloads](https://img.shields.io/npm/dm/eventverse.svg?style=flat)](https://www.npmjs.com/package/eventverse)
   <a href="https://badge.fury.io/js/eventverse"><img src="https://img.shields.io/github/issues/robertcorponoi/eventverse.svg" alt="issues" height="18"></a>
   <a href="https://badge.fury.io/js/eventverse"><img src="https://img.shields.io/github/license/robertcorponoi/eventverse.svg" alt="license" height="18"></a>

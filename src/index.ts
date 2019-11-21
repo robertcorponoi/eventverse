@@ -1,24 +1,23 @@
 'use strict'
 
-import * as utils from './utils'
-
 import Listener from './Listener';
+import { compareFunctions } from './utils'
 
 /**
  * Eventverse is a higly performant and easy to use event emitter for Nodejs and the browser.
- * 
- * @author Robert Corponoi <robertcorponoi@gmail.com>
  */
 export default class Eventverse {
 
 	/**
 	 * The maximum amount of listeners each event can have at one time.
+   * 
+   * @private
 	 * 
 	 * @property {number}
 	 * 
 	 * @default 10
 	 */
-  maxListenerCount: number;
+  private _maxListenerCount: number;
 
 	/**
 	 * A collection of all of the listeners created for this instance of Eventverse.
@@ -32,9 +31,16 @@ export default class Eventverse {
 	 */
   constructor(maxListenerCount: number = 10) {
 
-    this.maxListenerCount = maxListenerCount;
+    this._maxListenerCount = maxListenerCount;
 
   }
+
+  /**
+   * Returns the number of max listeners each event can have at one time.
+   * 
+   * @returns {number}
+   */
+  get maxListenerCount(): number { return this._maxListenerCount; }
 
 	/**
 	 * Returns the number of listeners for a given event.
@@ -70,7 +76,7 @@ export default class Eventverse {
 	 */
   emit(event: string, ...args: Array<string>) {
 
-    if (!this.exists(event)) return;
+    if (!this._exists(event)) return;
 
     const listeners: Array<Listener> = this.events[event];
 
@@ -95,13 +101,13 @@ export default class Eventverse {
 	 * @param {Object} context The context to use when calling the listener.
 	 * @param {boolean} once Indicates whether this listener should only be called once.
 	 * 
-	 * @returns {Eventverse}
+	 * @returns {Eventverse} Returns this for chaining.
 	 */
   addListener(event: string, fn: any, context = this, once = false): (Eventverse | undefined) {
 
     const listener = new Listener(fn, context, once);
 
-    if (!this.exists(event)) {
+    if (!this._exists(event)) {
 
       this.events[event] = [];
 
@@ -126,11 +132,11 @@ export default class Eventverse {
 	 * @param {string} event The name of the event to remove the listener on.
 	 * @param {Function} listener The listener to remove from the event.
 	 * 
-	 * @returns {Eventverse}
+	 * @returns {Eventverse} Returns this for chaining.
 	 */
   removeListener(event: string, listener: any): (Eventverse | undefined) {
 
-    if (!this.exists(event)) {
+    if (!this._exists(event)) {
 
       console.warn('[Eventverse][removeListener]: Unable to remove listener for an event that doesnt exist.');
 
@@ -140,7 +146,7 @@ export default class Eventverse {
 
     for (const eventListener of this.events[event]) {
 
-      if (utils.compareFunctions(eventListener.fn, listener)) {
+      if (compareFunctions(eventListener.fn, listener)) {
 
         this.events[event] = this.events[event].filter((evListener: any) => evListener != eventListener);
 
@@ -159,11 +165,11 @@ export default class Eventverse {
 	 * 
 	 * @param {string} event The name of the event to remove all listeners from.
 	 * 
-	 * @returns {Eventverse}
+	 * @returns {Eventverse} Returns this for chaining.
 	 */
   removeAllListeners(event: string): (Eventverse | undefined) {
 
-    if (!this.exists(event)) {
+    if (!this._exists(event)) {
 
       console.warn('[Eventverse][removeAllListeners]: Unable to remove listener for an event that doesnt exist.');
 
@@ -184,7 +190,7 @@ export default class Eventverse {
 	 * @param {Function} fn The function to run when the event is emitted.
 	 * @param {Object} [context=this] The context to use when calling the listener.
 	 * 
-	 * @returns {Eventverse}
+	 * @returns {Eventverse} Returns this for chaining.
 	 */
   once(event: string, fn: any, context: any = this): Eventverse {
 
@@ -201,7 +207,7 @@ export default class Eventverse {
 	 * @param {Function} fn The function to run when the event is emitted.
 	 * @param {Object} [context=this] The context to use when calling the listener.
 	 * 
-	 * @returns {Eventverse}
+	 * @returns {Eventverse} Returns this for chaining.
 	 */
   on(event: string, fn: any, context: any = this): Eventverse {
 
@@ -220,7 +226,7 @@ export default class Eventverse {
 	 * 
 	 * @returns {boolean} Returns true if the event exists or false otherwise.
 	 */
-  private exists(event: string) {
+  private _exists(event: string) {
 
     if (this.events[event]) return true;
 

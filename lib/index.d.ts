@@ -1,17 +1,17 @@
 /**
  * Eventverse is a higly performant and easy to use event emitter for Nodejs and the browser.
- *
- * @author Robert Corponoi <robertcorponoi@gmail.com>
  */
 export default class Eventverse {
     /**
      * The maximum amount of listeners each event can have at one time.
+   *
+   * @private
      *
      * @property {number}
      *
      * @default 10
      */
-    maxListenerCount: number;
+    private _maxListenerCount;
     /**
      * A collection of all of the listeners created for this instance of Eventverse.
      *
@@ -22,6 +22,12 @@ export default class Eventverse {
      * @param {number} [maxListenerCount=10] The maximum amount of listeners each event can have at one time.
      */
     constructor(maxListenerCount?: number);
+    /**
+     * Returns the number of max listeners each event can have at one time.
+     *
+     * @returns {number}
+     */
+    get maxListenerCount(): number;
     /**
      * Returns the number of listeners for a given event.
      *
@@ -54,7 +60,7 @@ export default class Eventverse {
      * @param {Object} context The context to use when calling the listener.
      * @param {boolean} once Indicates whether this listener should only be called once.
      *
-     * @returns {Eventverse}
+     * @returns {Eventverse} Returns this for chaining.
      */
     addListener(event: string, fn: any, context?: this, once?: boolean): (Eventverse | undefined);
     /**
@@ -63,7 +69,7 @@ export default class Eventverse {
      * @param {string} event The name of the event to remove the listener on.
      * @param {Function} listener The listener to remove from the event.
      *
-     * @returns {Eventverse}
+     * @returns {Eventverse} Returns this for chaining.
      */
     removeListener(event: string, listener: any): (Eventverse | undefined);
     /**
@@ -71,7 +77,7 @@ export default class Eventverse {
      *
      * @param {string} event The name of the event to remove all listeners from.
      *
-     * @returns {Eventverse}
+     * @returns {Eventverse} Returns this for chaining.
      */
     removeAllListeners(event: string): (Eventverse | undefined);
     /**
@@ -81,7 +87,7 @@ export default class Eventverse {
      * @param {Function} fn The function to run when the event is emitted.
      * @param {Object} [context=this] The context to use when calling the listener.
      *
-     * @returns {Eventverse}
+     * @returns {Eventverse} Returns this for chaining.
      */
     once(event: string, fn: any, context?: any): Eventverse;
     /**
@@ -91,7 +97,7 @@ export default class Eventverse {
      * @param {Function} fn The function to run when the event is emitted.
      * @param {Object} [context=this] The context to use when calling the listener.
      *
-     * @returns {Eventverse}
+     * @returns {Eventverse} Returns this for chaining.
      */
     on(event: string, fn: any, context?: any): Eventverse;
     /**
@@ -103,5 +109,5 @@ export default class Eventverse {
      *
      * @returns {boolean} Returns true if the event exists or false otherwise.
      */
-    private exists;
+    private _exists;
 }

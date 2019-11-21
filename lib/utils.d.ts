@@ -1,8 +1,5 @@
 /**
- * Compare two functions by turning them into strings and
- * removing whitespace/line-breaks and then checking equality.
- *
- * @since 0.1.0
+ * Compare two functions by turning them into strings and removing whitespace/line-breaks and then checking equality.
  *
  * @param {Function} fn1 The first function.
  * @param {Function} fn2 The second function.
