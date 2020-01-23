@@ -1,3 +1,9 @@
+1.0.7 / 2020-01-22
+==================
+* [DOCS] Moved logo to graphics repository and updated link in README.
+* [MISC] Updated dev dependencies to their latest versions.
+* [MISC] Updated license year to reflect new year.
+
 1.0.6 / 2019-11-20
 ==================
 * [MISC] Updated dependencies to their latest versions.

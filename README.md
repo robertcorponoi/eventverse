@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="250" height="250" src="./eventverse.png">
+  <img width="250" height="250" src="https://raw.githubusercontent.com/robertcorponoi/graphics/master/eventverse/eventverse-logo.png">
 </p>
 
 <h1 align="center">Eventverse</h1>
