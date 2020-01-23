@@ -1,3 +1,11 @@
+2.0.0 / 2020-01-22
+==================
+* [FEATURE] Removed `context` parameter from `on` and `once` as context and be preserved by using an arrow function instead.
+* [FEATURE] Added `uses` parameter to `on` to indicate the amount of uses a listener has before being destroyed automatically.
+* [DOCS] Added test and updated documentaiton for `uses`.
+* [MISC] Made `addListener` private as it should have been initially.
+* [MISC] Updated folder structure.
+
 1.0.7 / 2020-01-22
 ==================
 * [DOCS] Moved logo to graphics repository and updated link in README.

@@ -1,13 +1,12 @@
 'use strict'
 
-import Listener from './Listener';
-import { compareFunctions } from './utils'
+import Listener from './listener/Listener';
+import compareFunctions from './utils/compare-functions'
 
 /**
  * Eventverse is a higly performant and easy to use event emitter for Nodejs and the browser.
  */
 export default class Eventverse {
-
 	/**
 	 * The maximum amount of listeners each event can have at one time.
    * 
@@ -30,9 +29,7 @@ export default class Eventverse {
 	 * @param {number} [maxListenerCount=10] The maximum amount of listeners each event can have at one time. 
 	 */
   constructor(maxListenerCount: number = 10) {
-
     this._maxListenerCount = maxListenerCount;
-
   }
 
   /**
@@ -50,9 +47,7 @@ export default class Eventverse {
 	 * @returns {number}
 	 */
   listenerCount(event: string): number {
-
     return this.events[event].length;
-
   }
 
   /**
@@ -63,9 +58,7 @@ export default class Eventverse {
    * @returns {number} Returns the number of times the event was called.
    */
   timesCalled(event: string): number {
-
     return this.events[event][0].timesCalled;
-
   }
 
 	/**
@@ -75,55 +68,17 @@ export default class Eventverse {
 	 * @param {...*} args The arguments to pass to the listeners.
 	 */
   emit(event: string, ...args: Array<string>) {
-
     if (!this._exists(event)) return;
 
     const listeners: Array<Listener> = this.events[event];
 
     for (const listener of listeners) {
-
-      listener.fn.call(listener.ctx, ...args);
+      listener.fn.call(this, ...args);
 
       listener.timesCalled++;
 
-      if (listener.once) this.removeListener(event, listener.fn);
-
+      if (listener.once || listener.timesCalled === listener.uses) this.removeListener(event, listener.fn);
     }
-
-  }
-
-	/**
-	 * Adds a listener function for the given event.
-	 * 
-	 * 
-	 * @param {string} event The name of the event to add a listener for.
-	 * @param {Function} fn The function to run when the event is emitted.
-	 * @param {Object} context The context to use when calling the listener.
-	 * @param {boolean} once Indicates whether this listener should only be called once.
-	 * 
-	 * @returns {Eventverse} Returns this for chaining.
-	 */
-  addListener(event: string, fn: any, context = this, once = false): (Eventverse | undefined) {
-
-    const listener = new Listener(fn, context, once);
-
-    if (!this._exists(event)) {
-
-      this.events[event] = [];
-
-    }
-    else if (this.events[event].length === this.maxListenerCount) {
-
-      console.warn(`[Eventverse][addListener]: The event ${event} already has the max amount of listeners.`);
-
-      return;
-
-    }
-
-    this.events[event].push(listener);
-
-    return this;
-
   }
 
 	/**
@@ -135,29 +90,21 @@ export default class Eventverse {
 	 * @returns {Eventverse} Returns this for chaining.
 	 */
   removeListener(event: string, listener: any): (Eventverse | undefined) {
-
     if (!this._exists(event)) {
-
       console.warn('[Eventverse][removeListener]: Unable to remove listener for an event that doesnt exist.');
 
       return;
-
     }
 
     for (const eventListener of this.events[event]) {
-
       if (compareFunctions(eventListener.fn, listener)) {
-
         this.events[event] = this.events[event].filter((evListener: any) => evListener != eventListener);
 
         break;
-
       }
-
     }
 
     return this;
-
   }
 
 	/**
@@ -168,19 +115,15 @@ export default class Eventverse {
 	 * @returns {Eventverse} Returns this for chaining.
 	 */
   removeAllListeners(event: string): (Eventverse | undefined) {
-
     if (!this._exists(event)) {
-
       console.warn('[Eventverse][removeAllListeners]: Unable to remove listener for an event that doesnt exist.');
 
       return;
-
     }
 
     this.events[event] = [];
 
     return this;
-
   }
 
 	/**
@@ -188,16 +131,13 @@ export default class Eventverse {
 	 * 
 	 * @param {string} event The name of the event to add a listener for.
 	 * @param {Function} fn The function to run when the event is emitted.
-	 * @param {Object} [context=this] The context to use when calling the listener.
 	 * 
 	 * @returns {Eventverse} Returns this for chaining.
 	 */
-  once(event: string, fn: any, context: any = this): Eventverse {
-
-    this.addListener(event, fn, context, true);
+  once(event: string, fn: any): Eventverse {
+    this._addListener(event, fn, true);
 
     return this;
-
   }
 
 	/**
@@ -205,16 +145,42 @@ export default class Eventverse {
 	 * 
 	 * @param {string} event The name of the event to add a listener for.
 	 * @param {Function} fn The function to run when the event is emitted.
-	 * @param {Object} [context=this] The context to use when calling the listener.
+   * @param {number} [uses] Specify this to limit the number of times a listener function is used before being destroyed automatically.
 	 * 
 	 * @returns {Eventverse} Returns this for chaining.
 	 */
-  on(event: string, fn: any, context: any = this): Eventverse {
-
-    this.addListener(event, fn, context);
+  on(event: string, fn: any, uses?: number): Eventverse {
+    this._addListener(event, fn, false, uses);
 
     return this;
+  }
 
+  /**
+	 * Adds a listener function for the given event.
+	 * 
+   * @private
+	 * 
+	 * @param {string} event The name of the event to add a listener for.
+	 * @param {Function} fn The function to run when the event is emitted.
+	 * @param {boolean} once Indicates whether this listener should only be called once.
+	 * 
+	 * @returns {Eventverse} Returns this for chaining.
+	 */
+  private _addListener(event: string, fn: any, once: boolean = false, uses?: number): (Eventverse | undefined) {
+    const listener = new Listener(fn, once, uses);
+
+    if (!this._exists(event)) {
+      this.events[event] = [];
+    }
+    else if (this.events[event].length === this.maxListenerCount) {
+      console.warn(`[Eventverse][addListener]: The event ${event} already has the max amount of listeners.`);
+
+      return;
+    }
+
+    this.events[event].push(listener);
+
+    return this;
   }
 
 	/**
@@ -227,11 +193,8 @@ export default class Eventverse {
 	 * @returns {boolean} Returns true if the event exists or false otherwise.
 	 */
   private _exists(event: string) {
-
     if (this.events[event]) return true;
 
     return false;
-
   }
-
 }

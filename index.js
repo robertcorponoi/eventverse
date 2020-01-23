@@ -45,12 +45,6 @@ var Listener =
  */
 
 /**
- * The context to use when calling this listener.
- * 
- * @property {*}
- */
-
-/**
  * Whether or not this listener will be automatically destroyed after being run once.
  * 
  * @property {boolean}
@@ -61,20 +55,35 @@ var Listener =
  * 
  * @property {number} 
  */
-function Listener(fn, ctx, once) {
+
+/**
+ * The number of times this listener function should be used before being destroyed automatically.
+ * 
+ * @property {number}
+ */
+
+/**
+ * @param {Function} fn The function to run when this listener is called.
+ * @param {boolean} [once=false] Indicates whether this listener should only be called once or not.
+ * @param {number} [users=Infinity] Indicates how many times this listener can be called before being destoryed automatically.
+ */
+function Listener(fn) {
+  var once = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+  var uses = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : Infinity;
+
   _classCallCheck(this, Listener);
 
   _defineProperty(this, "fn", void 0);
-
-  _defineProperty(this, "ctx", void 0);
 
   _defineProperty(this, "once", void 0);
 
   _defineProperty(this, "timesCalled", 0);
 
+  _defineProperty(this, "uses", Infinity);
+
   this.fn = fn;
-  this.ctx = ctx;
   this.once = once;
+  this.uses = uses;
 };
 
 /**
@@ -190,10 +199,10 @@ function () {
 
           var listener = _step.value;
 
-          (_listener$fn = listener.fn).call.apply(_listener$fn, [listener.ctx].concat(args));
+          (_listener$fn = listener.fn).call.apply(_listener$fn, [this].concat(args));
 
           listener.timesCalled++;
-          if (listener.once) this.removeListener(event, listener.fn);
+          if (listener.once || listener.timesCalled === listener.uses) this.removeListener(event, listener.fn);
         }
       } catch (err) {
         _didIteratorError = true;
@@ -209,35 +218,6 @@ function () {
           }
         }
       }
-    }
-    /**
-     * Adds a listener function for the given event.
-     * 
-     * 
-     * @param {string} event The name of the event to add a listener for.
-     * @param {Function} fn The function to run when the event is emitted.
-     * @param {Object} context The context to use when calling the listener.
-     * @param {boolean} once Indicates whether this listener should only be called once.
-     * 
-     * @returns {Eventverse} Returns this for chaining.
-     */
-
-  }, {
-    key: "addListener",
-    value: function addListener(event, fn) {
-      var context = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : this;
-      var once = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
-      var listener = new Listener(fn, context, once);
-
-      if (!this._exists(event)) {
-        this.events[event] = [];
-      } else if (this.events[event].length === this.maxListenerCount) {
-        console.warn("[Eventverse][addListener]: The event ".concat(event, " already has the max amount of listeners."));
-        return;
-      }
-
-      this.events[event].push(listener);
-      return this;
     }
     /**
      * Removes a listener function for the given event.
@@ -320,7 +300,6 @@ function () {
      * 
      * @param {string} event The name of the event to add a listener for.
      * @param {Function} fn The function to run when the event is emitted.
-     * @param {Object} [context=this] The context to use when calling the listener.
      * 
      * @returns {Eventverse} Returns this for chaining.
      */
@@ -328,8 +307,8 @@ function () {
   }, {
     key: "once",
     value: function once(event, fn) {
-      var context = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : this;
-      this.addListener(event, fn, context, true);
+      this._addListener(event, fn, true);
+
       return this;
     }
     /**
@@ -337,16 +316,45 @@ function () {
      * 
      * @param {string} event The name of the event to add a listener for.
      * @param {Function} fn The function to run when the event is emitted.
-     * @param {Object} [context=this] The context to use when calling the listener.
+      * @param {number} [uses] Specify this to limit the number of times a listener function is used before being destroyed automatically.
      * 
      * @returns {Eventverse} Returns this for chaining.
      */
 
   }, {
     key: "on",
-    value: function on(event, fn) {
-      var context = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : this;
-      this.addListener(event, fn, context);
+    value: function on(event, fn, uses) {
+      this._addListener(event, fn, false, uses);
+
+      return this;
+    }
+    /**
+    * Adds a listener function for the given event.
+    * 
+     * @private
+    * 
+    * @param {string} event The name of the event to add a listener for.
+    * @param {Function} fn The function to run when the event is emitted.
+    * @param {boolean} once Indicates whether this listener should only be called once.
+    * 
+    * @returns {Eventverse} Returns this for chaining.
+    */
+
+  }, {
+    key: "_addListener",
+    value: function _addListener(event, fn) {
+      var once = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+      var uses = arguments.length > 3 ? arguments[3] : undefined;
+      var listener = new Listener(fn, once, uses);
+
+      if (!this._exists(event)) {
+        this.events[event] = [];
+      } else if (this.events[event].length === this.maxListenerCount) {
+        console.warn("[Eventverse][addListener]: The event ".concat(event, " already has the max amount of listeners."));
+        return;
+      }
+
+      this.events[event].push(listener);
       return this;
     }
     /**

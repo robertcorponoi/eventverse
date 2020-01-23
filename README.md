@@ -76,13 +76,13 @@ return numMaxListeners = person.maxListenerCount; // returns 10
 
 Adds a listener function for the given event. If the event doesn't exist, it will be created.
 
-| param   | type     | description                                    | default    |
-|---------|----------|------------------------------------------------|------------|
-| event   | string   | The name of the event to add a listener to     |            |
-| fn      | Function | The function to call when the event is emitted |            |
-| context | Object   | The context to use when calling the listener   | Eventverse |
+| param   | type     | description                                                                                | default    |
+|---------|----------|--------------------------------------------------------------------------------------------|------------|
+| event   | string   | The name of the event to add a listener to                                                 |            |
+| fn      | Function | The function to call when the event is emitted                                             |            |
+| uses    | number   | Indicates how many times this listener can be called before being destoryed automatically. | Infinity   |
 
-Add a function with no parameters.
+Add a function with no parameters:
 
 ```js
 const helloWorld = () => console.log('Hello World!');
@@ -90,13 +90,22 @@ const helloWorld = () => console.log('Hello World!');
 person.on('hello', helloWorld);
 ```
 
-Adding a function with parameters.
+Adding a function with parameters:
 
 ```js
 const helloOtherPerson = (personName) => console.log(`Hello ${personName}!`);
 
 person.on('hello', helloOtherPerson);
 ```
+
+Adding a function that only has 2 uses:
+
+```js
+const helloWorld = () => console.log('Hello World!');
+
+person.on('hello', helloWorld, 2);
+```
+
 
 ### **once**
 
@@ -106,7 +115,6 @@ Once is the same as `on` except that it sets a listener that will only be called
 |---------|----------|------------------------------------------------|------------|
 | event   | string   | The name of the event to add a listener to     |            |
 | fn      | Function | The function to call when the event is emitted |            |
-| context | Object   | The context to use when calling the listener   | Eventverse |
 
 Add a function with no parameters.
 
@@ -192,11 +200,9 @@ person.removeAllListeners('hello');
 
 ## **Tests**
 
-As with all of the modules I release, this is thoroughly tested.
+To run all of the available tests, use:
 
-To run all of the available tests, use the following command:
-
-```
+```bash
 $ npm run test
 ```
 

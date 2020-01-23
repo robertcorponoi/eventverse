@@ -52,18 +52,6 @@ export default class Eventverse {
      */
     emit(event: string, ...args: Array<string>): void;
     /**
-     * Adds a listener function for the given event.
-     *
-     *
-     * @param {string} event The name of the event to add a listener for.
-     * @param {Function} fn The function to run when the event is emitted.
-     * @param {Object} context The context to use when calling the listener.
-     * @param {boolean} once Indicates whether this listener should only be called once.
-     *
-     * @returns {Eventverse} Returns this for chaining.
-     */
-    addListener(event: string, fn: any, context?: this, once?: boolean): (Eventverse | undefined);
-    /**
      * Removes a listener function for the given event.
      *
      * @param {string} event The name of the event to remove the listener on.
@@ -85,21 +73,32 @@ export default class Eventverse {
      *
      * @param {string} event The name of the event to add a listener for.
      * @param {Function} fn The function to run when the event is emitted.
-     * @param {Object} [context=this] The context to use when calling the listener.
      *
      * @returns {Eventverse} Returns this for chaining.
      */
-    once(event: string, fn: any, context?: any): Eventverse;
+    once(event: string, fn: any): Eventverse;
     /**
      * Adds a listener function for the given event.
      *
      * @param {string} event The name of the event to add a listener for.
      * @param {Function} fn The function to run when the event is emitted.
-     * @param {Object} [context=this] The context to use when calling the listener.
+   * @param {number} [uses] Specify this to limit the number of times a listener function is used before being destroyed automatically.
      *
      * @returns {Eventverse} Returns this for chaining.
      */
-    on(event: string, fn: any, context?: any): Eventverse;
+    on(event: string, fn: any, uses?: number): Eventverse;
+    /**
+       * Adds a listener function for the given event.
+       *
+     * @private
+       *
+       * @param {string} event The name of the event to add a listener for.
+       * @param {Function} fn The function to run when the event is emitted.
+       * @param {boolean} once Indicates whether this listener should only be called once.
+       *
+       * @returns {Eventverse} Returns this for chaining.
+       */
+    private _addListener;
     /**
      * Checks if an event exists.
    *

@@ -9,12 +9,6 @@ export default class Listener {
      */
     fn: any;
     /**
-     * The context to use when calling this listener.
-     *
-     * @property {*}
-     */
-    ctx: any;
-    /**
      * Whether or not this listener will be automatically destroyed after being run once.
      *
      * @property {boolean}
@@ -26,5 +20,5 @@ export default class Listener {
      * @property {number}
      */
     timesCalled: number;
-    constructor(fn: any, ctx: any, once: boolean);
+    constructor(fn: any, once: boolean);
 }
