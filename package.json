@@ -1,6 +1,6 @@
 {
   "name": "eventverse",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Eventverse is a highly performant and easy to understand event emitter for the JavaScript Universe which includes Node and the browser.",
   "main": "index.js",
   "module": "eventverse.js",
